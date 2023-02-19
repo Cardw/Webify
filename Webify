@@ -1,0 +1,46 @@
+```
+// API Webify
+// A web API for developers
+
+// Dependencies
+const express = require("express");
+const bodyParser = require("body-parser");
+
+// Express setup
+const app = express();
+
+// Parse incoming requests data
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+
+// Initialize API
+app.get("/", (req, res) => {
+    res.status(200).send({
+        message: "API Webify is now up and running!"
+    });
+});
+
+// API Routes
+app.use("/api/v1/", require("./routes/apis"));
+
+// Error handling
+app.use((req, res, next) => {
+    const error = new Error("Not found");
+    error.status = 404;
+    next(error);
+});
+
+app.use((error, req, res, next) => {
+    res.status(error.status || 500);
+    res.json({
+        error: {
+            message: error.message
+        }
+    });
+});
+
+// Export API
+module.exports = app;
+```
+
+Written by Cardwell
